@@ -1,4 +1,4 @@
-# Drupal 7/Behat/Travis CI Demo for BAD Camp 2014
+# Drupal 7/Behat/Travis CI Demo
 
 Code Status (master branch):
 <a href="https://travis-ci.org/arithmetric/badcamp2014-behat-travisci"><img src="https://travis-ci.org/arithmetric/badcamp2014-behat-travisci.svg?branch=master"></a>
@@ -47,7 +47,7 @@ Follow these steps to set up the Drupal project:
 
     For MySQL, create a database named "drupal" and ensure the "root" user has
     access to the database with an empty password.
-    
+
     For SQLite, no configuration is required.
 
 2. Fork this repository, then clone your forked copy.
@@ -61,7 +61,7 @@ or the global copy (`composer install`).
 5. Use the included install script for your chosen database:
 
     For MySQL, use: `./bin/install_drupal_mysql.sh`
-    
+
     For SQLite, use: `./bin/install_drupal_sqlite.sh`
 
 6. To confirm that it worked, ensure that the following command outputs a
