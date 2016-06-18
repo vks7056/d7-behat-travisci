@@ -1,6 +1,6 @@
 language: php
 php:
-  - 5.4
+  - 5.6
 
 mysql:
   database: drupal
@@ -22,6 +22,6 @@ before_script:
   - $BASEDIR/vendor/bin/drush runserver --server=builtin 8080 --strict=0 &
   - sleep 4
   - cd ..
-  
+
 script:
   - $BASEDIR/vendor/bin/behat
