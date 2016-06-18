@@ -11,10 +11,10 @@ default:
     Behat\MinkExtension:
       goutte: ~
       selenium2: ~
-      base_url: http://bcd7.dev/
+      base_url: http://localhost:8080
     Drupal\DrupalExtension:
       blackbox: ~
-      api_driver: 'drush'
+      api_driver: 'drupal'
       drush:
         root: './html'
         alias: 'bcd7'
