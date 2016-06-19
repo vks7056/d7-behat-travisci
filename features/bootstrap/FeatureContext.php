@@ -4,7 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-
+use Behat\MinkExtension\Context\MinkContext;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
@@ -20,6 +20,14 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
    */
   public function __construct(array $parameters = []) {
     // Initialize your context here
+  }
+
+    /**
+   * @Then /^I wait for few seconds$/
+   */
+  public function iWaitForFewSeconds()
+  {
+      $this->getSession()->wait(5000,TRUE);
   }
 
 //
