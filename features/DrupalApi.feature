@@ -4,11 +4,7 @@ Feature: Test drupal driver.
     Given I am logged in as a user with the "administrator" role
     When I am viewing an "article" content with the title "My article"
     Then I should see the heading "My article"
-    Scenario: Create a node
-    Given I am logged in as a user with the "administrator" role
-    When I am viewing an "article" content with the title "My article"
-    Then I should see the heading "My article"
-
+    
   Scenario: Run cron
     Given I am logged in as a user with the "administrator" role
     When I run cron
