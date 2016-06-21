@@ -23,6 +23,79 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
   }
 
     /**
+     * The BeforeSuite hook is run before any feature in the suite runs.
+     *
+     * @BeforeSuite
+     */
+    public static function prepare($event) {
+      if (db_table_exists('watchdog')) {
+        db_truncate('watchdog')->execute();
+      }
+    }
+    /**
+     * @BeforeScenario
+     *
+     * Delete the RESTful tokens before every scenario, so user starts as
+     * anonymous.
+     */
+    public function deleteRestfulTokens($event) {
+      if (!module_exists('restful_token_auth')) {
+        // Module is disabled.
+        return;
+      }
+      if (!$entities = entity_load('restful_token_auth')) {
+        // No tokens found.
+        return;
+      }
+      foreach ($entities as $entity) {
+        $entity->delete();
+      }
+    }
+
+    /**
+     * The AfterScenario hook is run after executing a scenario.
+     *
+     * @AfterScenario
+     */
+    public function afterScenario($event) {
+
+      if (db_table_exists('watchdog')) {
+        $log = db_select('watchdog', 'w')
+              ->fields('w')
+              ->condition('w.type', 'php', '=')
+              ->execute()
+              ->fetchAll();
+        if (!empty($log)) {
+          foreach ($log as $error) {
+            // Make the substitutions easier to read in the log.
+            $error->variables = unserialize($error->variables);
+            print_r($error);
+          }
+          throw new \Exception('PHP errors logged to watchdog in this scenario.');
+        }
+      }
+    }
+    /**
+     * @AfterStep
+     *
+     * Take a screen shot after failed steps for Selenium drivers (e.g.
+     * PhantomJs).
+     */
+    public function takeScreenshotAfterFailedStep($event) {
+      if ($event->getTestResult()->isPassed()) {
+        // Not a failed step.
+        return;
+      }
+      if ($this->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
+        $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-failed-step.png';
+        $screenshot = $this->getSession()->getDriver()->getScreenshot();
+        file_put_contents($file_name, $screenshot);
+        print "Screenshot for failed step created in $file_name";
+      }
+    }
+
+
+    /**
    * @Then /^I wait for few seconds$/
    */
   public function iWaitForFewSeconds()
@@ -64,43 +137,7 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
     $xpath = $this->getSession()->getSelectorsHandler()->selectorToXpath('css', $element);
     $this->waitForXpathNode($xpath, $appear == 'appear');
   }
-  /**
-   * @AfterStep
-   *
-   * Take a screen shot after failed steps for Selenium drivers (e.g.
-   * PhantomJs).
-   */
-  public function takeScreenshotAfterFailedStep($event) {
-    if ($event->getTestResult()->isPassed()) {
-      // Not a failed step.
-      return;
-    }
-    if ($this->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
-      $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-failed-step.png';
-      $screenshot = $this->getSession()->getDriver()->getScreenshot();
-      file_put_contents($file_name, $screenshot);
-      print "Screenshot for failed step created in $file_name";
-    }
-  }
-  /**
-   * @BeforeScenario
-   *
-   * Delete the RESTful tokens before every scenario, so user starts as
-   * anonymous.
-   */
-  public function deleteRestfulTokens($event) {
-    if (!module_exists('restful_token_auth')) {
-      // Module is disabled.
-      return;
-    }
-    if (!$entities = entity_load('restful_token_auth')) {
-      // No tokens found.
-      return;
-    }
-    foreach ($entities as $entity) {
-      $entity->delete();
-    }
-  }
+
   /**
    * Helper function; Execute a function until it return TRUE or timeouts.
    *
