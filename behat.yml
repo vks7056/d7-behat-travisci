@@ -3,6 +3,9 @@ default:
     default:
       contexts:
         - FeatureContext
+        - CustomContext:
+                  baseUrl: http://localhost:8080
+                  tempPath: /var/tmp
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
