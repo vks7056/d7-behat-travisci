@@ -13,10 +13,10 @@ default:
   extensions:
     Behat\MinkExtension:
       goutte: ~
-      base_url: http://bcd7.dev
+      base_url: http://localhost:8080
       browser_name: phantomjs
       selenium2:
-        wd_host: http://bcd7.dev:4444/wd/hub
+        wd_host: http://localhost:4444/wd/hub
         capabilities:
           version: ''
     Drupal\DrupalExtension:
