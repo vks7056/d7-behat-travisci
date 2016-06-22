@@ -12,4 +12,4 @@ Feature: Login
     Given I am logged in as a user with the "authenticated user" role
      When I click "Log out"
      Then I should be on the homepage
-      And I should see "User login"
+      And I should see "User login" 
